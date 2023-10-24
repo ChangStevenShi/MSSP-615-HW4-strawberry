@@ -1,9 +1,11 @@
 ---
 title: "Stawberries: exploratory data analysis"
-author: MA615
+author: Chang Shi
 date: 2023 Oct 23
-format: html
-engine: knitr
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 ---
 
 # Assignment 
@@ -865,14 +867,29 @@ print(matched_periods)
 
 # Since 'Data Item' column has already been split into multiple columns (temp1a, temp1b, temp2, temp3, temp4),
 # we can directly work with these columns.
+strwb_survey <- strwb_survey |> 
+  separate_wider_delim(  cols = `Data Item`,
+                         delim = ",",
+                         names = c("temp1",
+                                 "temp2",
+                                 "temp3",
+                                 "temp4"),
+                         too_many = "error",
+                         too_few = "align_start"
+                       )
+
+strwb_survey <- strwb_survey |>
+  separate_wider_delim(  cols = temp1,
+                         delim = " - ",
+                         names = c("temp1a",
+                                 "temp1b"),
+                         too_many = "error",
+                         too_few = "align_start"
+                       )
+
 
 # Further split the 'temp1' column
-#strwb_survey <- strwb_survey %>%
-#  separate(temp1, 
-#           into = c("temp1a", "temp1b"), 
-#           sep = " - ", 
-#           extra = "drop", 
-#           fill = "right")
+
 
 # Check the distinct values of 'temp1a' to confirm its content
 a <- distinct(strwb_survey, temp1a)
@@ -931,14 +948,14 @@ print(common_chemicals)
 
 
 #
-#strwb_survey <- strwb_survey |>
-#  separate_wider_delim(  cols = Domain,
-#                         delim = ",",
-#                         names = c("temp22",
-#                                 "temp23"),
-#                         too_many = "error",
-#                         too_few = "align_start"
-#                       )
+strwb_survey <- strwb_survey |>
+  separate_wider_delim(  cols = Domain,
+                         delim = ",",
+                         names = c("temp22",
+                                 "temp23"),
+                         too_many = "error",
+                         too_few = "align_start"
+                       )
 
 
 t22 <- unique(strwb_survey$temp22)
@@ -985,6 +1002,10 @@ strwb_survey_mkt <- strwb_survey |> filter(!((temp22 == "CHEMICAL") | (temp42 ==
 
 ```
 
+```{r}
+
+```
+
 <!-- drop 1-value columns strawberry chems  -->
 
 ```{r}
@@ -994,7 +1015,7 @@ strwb_survey_mkt <- strwb_survey |> filter(!((temp22 == "CHEMICAL") | (temp42 ==
 
 chem1 <-  drop_one_value_col(strwb_survey_chem)
 
-# chem1 |> kable(caption = "1-value columns dropped")
+chem1 |> kable(caption = "1-value columns dropped")
 
 chem1 <- setdiff(colnames(strwb_survey_chem), chem1$col_name)
 
@@ -1003,8 +1024,6 @@ strwb_survey_chem <- strwb_survey_chem |> select(all_of(chem1))
 ```
 
 ```{r}
-
-
 library(dplyr)
 # Assuming you've already loaded tidyr, dplyr, and ggplot2
 
@@ -1037,24 +1056,34 @@ pacf(time_series_data$Value, main="Partial Autocorrelation for Selected Metric")
 
 
 ```
+
+
 <!-- mkt -->
 
+```{r}
+
+
+
+```
 
 ```{r}
 #| label: mkt 
 #| echo: false
 #| eval: true
 
-#mkt1 <- drop_one_value_col(strwb_survey_mkt)
+mkt1 <- drop_one_value_col(strwb_survey_mkt)
 
- #mkt1 |> kable(caption = "droping 1-value cols - mkt")
+mkt1 |> kable(caption = "droping 1-value cols - mkt")
 
-#mkt1 <- setdiff(colnames(strwb_survey_mkt), mkt1$col_name)
+mkt1 <- setdiff(colnames(strwb_survey_mkt), mkt1$col_name)
 
-#strwb_survey_mkt <- strwb_survey_mkt |> select(all_of(mkt1))
+strwb_survey_mkt <- strwb_survey_mkt |> select(all_of(mkt1))
 
 ```
 
+```{r}
+
+```
 <p style="page-break-before: always"></p>
 
 ### These references have been left in the document to help while you are writing.  Cite those you use and drop the rest from the final document.
